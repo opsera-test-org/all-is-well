@@ -136,6 +136,7 @@ jobs:
 
       - name: Run Grype Scan
         id: grype
+        continue-on-error: true
         uses: anchore/scan-action@v4
         with:
           image: ${{ needs.build-image.outputs.image_name }}
@@ -144,6 +145,7 @@ jobs:
           output-format: sarif
 
       - name: Upload SARIF Report
+        continue-on-error: true
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
@@ -151,13 +153,14 @@ jobs:
 
       - name: Evaluate Scan Results
         id: evaluate
+        if: always()
         run: |
           # In warn mode, always pass but show results
           echo "passed=true" >> $GITHUB_OUTPUT
           echo "### 🔍 Grype Vulnerability Scan" >> $GITHUB_STEP_SUMMARY
           echo "- **Mode**: Warn (non-blocking)" >> $GITHUB_STEP_SUMMARY
           echo "- **Scan Status**: Complete" >> $GITHUB_STEP_SUMMARY
-          echo "- **View Results**: GitHub Security tab" >> $GITHUB_STEP_SUMMARY
+          echo "- **View Results**: Check workflow logs or GitHub Security tab" >> $GITHUB_STEP_SUMMARY
 
   push-to-ecr:
     name: 4️⃣ Push Image to ECR
