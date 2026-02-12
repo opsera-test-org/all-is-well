@@ -16,7 +16,7 @@ labels:
 images:
   - name: PLACEHOLDER_ECR_URI
     newName: PLACEHOLDER_ECR_URI
-    newTag: dev-latest
+    newTag: dev-2dd7b91b-20260212042840
 
 replicas:
   - name: all-is-well
