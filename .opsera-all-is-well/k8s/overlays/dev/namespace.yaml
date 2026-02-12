@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: opsera-all-is-well-dev
-  labels:
-    tenant: opsera
-    app: all-is-well
-    environment: dev
-    managed-by: opsera-c2c
