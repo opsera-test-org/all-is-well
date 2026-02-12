@@ -297,6 +297,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [update-manifests]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -310,6 +313,22 @@ jobs:
             --name ${{ env.HUB_CLUSTER }} \
             --region ${{ env.AWS_REGION }} \
             --alias hub
+
+      - name: Create ArgoCD Application (Idempotent)
+        run: |
+          APP_NAME="${{ env.TENANT }}-${{ env.APP_NAME }}-${{ env.ENV }}"
+
+          # Check if application already exists
+          if kubectl --context hub get application ${APP_NAME} -n argocd &>/dev/null; then
+            echo "✓ ArgoCD application already exists: ${APP_NAME}"
+          else
+            echo "Creating ArgoCD application: ${APP_NAME}"
+
+            # Create the application from the manifest file
+            kubectl --context hub apply -f .opsera-${{ env.APP_NAME }}/argocd/application-${{ env.ENV }}.yaml
+
+            echo "✓ ArgoCD application created: ${APP_NAME}"
+          fi
 
       - name: Hard Refresh ArgoCD Application
         run: |
