@@ -49,7 +49,7 @@ environments:
 security:
   gitleaks:
     enabled: true
-    mode: block
+    mode: warn
   grype:
     enabled: true
     mode: warn

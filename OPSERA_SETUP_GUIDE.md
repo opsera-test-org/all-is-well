@@ -222,7 +222,7 @@ kubectl get pods -n opsera-all-is-well-dev -l app=all-is-well
 
 | Tool | Status | Mode |
 |------|--------|------|
-| **Gitleaks** | ✅ Enabled | Block |
+| **Gitleaks** | ✅ Enabled | Warn (non-blocking) |
 | **Grype** | ✅ Enabled | Warn (non-blocking) |
 | **SonarQube** | ⏭️ Skipped | N/A |
 
