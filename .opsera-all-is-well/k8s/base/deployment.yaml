@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: all-is-well
+  labels:
+    app: all-is-well
+    tenant: opsera
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: all-is-well
+  template:
+    metadata:
+      labels:
+        app: all-is-well
+        tenant: opsera
+    spec:
+      serviceAccountName: all-is-well-sa
+      containers:
+      - name: all-is-well
+        image: PLACEHOLDER_ECR_URI
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 101
+          runAsGroup: 101
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: false
+      imagePullSecrets:
+      - name: ecr-pull-secret
